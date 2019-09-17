@@ -4,9 +4,10 @@
 <head>
 	<title>Home</title>
 </head>
-<body>
+<body>  
 <script type="text/javascript">
 window.location.href="main.do"
+/* 메인으로 가기 */
 </script>
 </body>
 </html>
