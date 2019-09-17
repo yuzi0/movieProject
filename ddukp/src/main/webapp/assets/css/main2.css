@@ -1027,7 +1027,7 @@ label {
   width: 100%;
 }
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
-  margin-left: 30px;
+  /*margin-left: 30px;*/
 }
 .page-ads .styled-select {
   width: 100%;
@@ -1741,7 +1741,6 @@ footer {
   text-transform: uppercase;
 }
 .inner-box {
- /*  border: 1px solid #eee; */
   padding-top: 30px;
   margin-bottom: 30px;
 }
@@ -3209,6 +3208,8 @@ blockquote p a:hover {
   padding: 15px 10px;
   width: 100%;
 }
+
+
 .form-control:focus {
   box-shadow: none;
 }
@@ -3533,48 +3534,20 @@ span#lwrite{
 }
 .effect {
 	margin: 30px 20px;
-	display: inline-block; 
+	display: inline-block;
 	position: relative;
-	overflow: hidden; 
-	padding: 6px; 6px정도 이미지 밖으로 표현
+	overflow: hidden; /* 불필요한 부분 가리기 */
+	padding: 6px; /* 6px정도 이미지 밖으로 표현 */
 	
-} 
+}
 
 .effect img {
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-	width: 20%;
+	width: 20%; 
 
 }
-/* 
- .effect:before, .effect:after {
-	content: "";
-	position: absolute;
-	z-index: 1;
-	width: 97px;
-	height: 50px;
-	background: #fff;
-	 transform: rotate(-30deg);
-} */
-/*
-왼쪽 위
-.effect:before{
-	 box-shadow: 0 10px 8px -12px rgba(0, 0, 0, 0.8);
-	 top: -24px;
-	 bottom: auto;
-	 right: auto;
-	 left: -26px;
-}
-오른쪽 아래
-.effect:after {
-	box-shadow: 0 -10px 10px -10px rgba(0, 0, 0, 0.7);
-	top: auto;
-	bottom: -22px;
-	right: -25px;
-	left: auto;
-}
-.effect:hover:before,.effect:hover:after{
-	position: static;
-} */
+
+
 #msearch{
 	padding:0 40px;
 }
@@ -3603,8 +3576,11 @@ span#lwrite{
     margin-top: 20px;
 }
 /* 영화상세 */
+.movie-img{
+	text-align: center;
+}
 .movie-img > img{
-	width: 740px; height: 500px;
+	height: 500px;
 }
 .movie{
 	 padding: 30px; margin-top: 30px; 
@@ -3637,5 +3613,4 @@ span#lwrite{
 }
 #moviecategory{
 	text-align:center; 
-	/* padding: 30px; */
 }

@@ -80,7 +80,7 @@
 			<div class="col-sm-12 col-md-9 col-md-offset-2">
 
 				<div class="page-ads box2">
-					<div class="thumb">
+					<div class="">
 						<img alt="" src="./assets/img/movie/movie_image.jpg">
 					</div>
 					<div class="job-list-content">
@@ -144,6 +144,7 @@
 					</ul>
 
 				</div>
+				
 			</div>
 		</div>
 		<%@include file="../footer.jsp"%>

@@ -86,13 +86,11 @@
 					<div class="row">
 						<div class="col-md-3 col-xs-4">
 							<div class="search-category-container1">
-								<label class="styled-select"> 
 								<select class="dropdown-product selectpicker">
 										<option selected="selected">---</option>
 										<option>제목</option>
 										<option>내용</option>
 								</select>
-								</label>
 							</div>
 						</div>
 						<div class="col-md-4 col-xs-6">

@@ -86,13 +86,11 @@
 							<div class="row">
 								<div class="col-md-3 col-xs-4">
 									<div class="search-category-container1">
-										<label class="styled-select"> <select
-											class="dropdown-product selectpicker">
-												<option selected="selected">---------</option>
-												<option>아이디</option>
-												<option>이름</option>
+										<select class="dropdown-product selectpicker">
+											<option selected="selected">---------</option>
+											<option>아이디</option>
+											<option>이름</option>
 										</select>
-										</label>
 									</div>
 								</div>
 								<div class="col-md-4 col-xs-6">
@@ -125,7 +123,7 @@
 							</div>
 						</div>
 						<div class="alerts-content">
-							<div class="row"> 
+							<div class="row">
 								<a href="columnView.do">
 									<div class="col-md-3 col-xs-3">
 										<p>Web Designer</p>
@@ -147,7 +145,7 @@
 						</div>
 
 
-						<br> 
+						<br>
 					</div>
 					<div class="" style="padding: 20px">
 						<a href="memberWrite.do" class="btn btn-common pull-right">삭제</a>
@@ -156,17 +154,17 @@
 						<ul class="pagination">
 							<li class="active"><a href="#" class="btn btn-common"><i
 									class="ti-angle-left"></i> </a></li>
-							<li><a href="#">1</a></li> 
+							<li><a href="#">1</a></li>
 							<li><a href="#">2</a></li>
 							<li><a href="#">3</a></li>
 							<li><a href="#">4</a></li>
 							<li><a href="#">5</a></li>
-							<li class="active"><a href="#" class="btn btn-common">
-									<i class="ti-angle-right"></i>
+							<li class="active"><a href="#" class="btn btn-common"> <i
+									class="ti-angle-right"></i>
 							</a></li>
 						</ul>
 
-					</div> 
+					</div>
 				</div>
 			</div>
 		</div>

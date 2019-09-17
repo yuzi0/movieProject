@@ -125,6 +125,9 @@
 				<div style="margin-bottom: 20px;"></div>
 
 			</div>
+						<div class="col-md-12" style="padding: 20px">
+				<a href="movieSortList.do" class="btn btn-common pull-right">목록</a>
+			</div> 
 		</div>
 	</div>
 	<%@include file="../footer.jsp"%>

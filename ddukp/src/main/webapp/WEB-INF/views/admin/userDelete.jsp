@@ -84,22 +84,22 @@
 					<div class="content">
 						<form method="" action="">
 							<div class="row">
-								<div class="col-md-3 col-xs-4">
+								<div class="col-md-2 col-xs-4">
 									<div class="search-category-container1">
-										<label class="styled-select"> <select
+										<select
 											class="dropdown-product selectpicker">
 												<option selected="selected">---------</option>
 												<option>아이디</option>
 												<option>이름</option>
 										</select>
-										</label>
+									
 									</div>
 								</div>
 								<div class="col-md-4 col-xs-6">
 									<div class="form-group">
 										<input class="form-control" type="text"
 											placeholder="job title / keywords / company name">
-									</div>
+			 						</div>
 								</div>
 								<div class="col-md-1 col-xs-1">
 									<button type="button" class="btn btn-search-icon">
