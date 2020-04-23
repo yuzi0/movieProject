@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +12,8 @@
 	content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
 <title>나의 정보 수정</title>
 
+<script src="./resources/jquery-3.4.1.js"></script>
+<script src="./resources/jquery-3.4.1.min.js"></script>  
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="./assets/css/bootstrap.min.css"
@@ -48,15 +53,158 @@
 <link rel="stylesheet" type="text/css"
 	href="./assets/css/colors/red.css" media="screen" />
 
-
+<script type="text/javascript">
+	$(document).ready(function () {
+		/* 값이 입력됐는지 확인 과정 */
+		$("#change_btn").on('click', function(){
+			if ($('input[name=name]').val() == '') {
+				alert('이름을 입력해주세요.');
+				return false;
+			}
+			
+			if ($('input[name=pwd]').val() == '') {
+				alert('비밀번호를 입력해주세요.');
+				
+				return false;
+			}
+		});
+	});
+</script>
 
 </head>
 <body>
 	<!-- Header Section Start -->
 	<div class="header">
-		<%@include file="../nav2.jsp"%>
+<div class="logo-menu">
+	<nav class="navbar navbar-default main-navigation" role="navigation"
+		data-spy="affix" data-offset-top="50">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand logo" href="main.do"><img
+					src="./assets/img/logo.png" alt=""></a>
+			</div>
 
-	</div>
+			<div class="collapse navbar-collapse" id="navbar">
+				<!-- Start Navigation List -->
+				<ul class="nav navbar-nav">
+					<li><a href="introduceMoviep.do"> MOVIEP </a></li>
+					<li><a href="movieSortList.do"> 영화 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="movieSortList.do"> 장르별 영화 </a></li>
+						</ul></li>
+					<li><a href="freeList.do"> 커뮤니티 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="freeList.do"> 자유 게시판 </a></li>
+							<li><a href="columnList.do"> 칼럼 게시판 </a></li>
+							<li><a href="latterList.do"> 후기 게시판 </a></li>
+						</ul></li>
+					<li><a href="infoBoard.do"> Q & A <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="infoBoard.do"> 공지사항 </a></li>
+							<li><a href="customerCenter.do"> 고객센터 </a></li>
+						</ul></li>
+					<c:set var="sessionId" value="${sid}" />
+
+					<c:if test="${!empty sid}">
+						<c:choose>
+							<c:when test="${fn : contains(sessionId, 'admin')}">
+								<li><a href="userDelete.do"> 관리자페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="userDelete.do"> 회원 관리 </a></li>
+										<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+									</ul></li>
+							</c:when>
+							<c:otherwise>
+								<li><a class="active href="memberInfo.do"> 마이페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a class="active" href="memberInfo.do"> 나의 정보 </a></li>
+										<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+										<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+									</ul></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</ul>
+				<ul class="nav navbar-nav navbar-right float-right">
+					<c:if test="${empty sid }">
+						<li class="right"><a href="login.do"><i class="ti-lock"></i>
+								로그인</a></li>
+					</c:if>
+					<c:if test="${!empty sid }">
+						<li class="right"><a href="logout_ok.do"><i
+								class="ti-lock"></i>로그아웃</a></li>
+					</c:if>
+				</ul>
+			</div>
+		</div>
+		<!-- Mobile Menu Start -->
+		<ul class="wpb-mobile-menu">
+			<li><a href="introduceMoviep.do">MOVIEP</a></li>
+			<li><a href="movieSortList.do">영화</a>
+				<ul>
+					<li><a href="movieSortList.do">장르별 영화</a></li>
+				</ul></li>
+			<li><a href="freeList.do">커뮤니티</a>
+				<ul>
+					<li><a href="freeList.do">자유 게시판</a></li>
+					<li><a href="columnList.do">칼럼 게시판</a></li>
+					<li><a href="latterList.do">후기 게시판</a></li>
+				</ul></li>
+			<li><a href="infoBoard.do">Q & A</a>
+				<ul>
+					<li><a href="infoBoard.do">공지사항</a></li>
+					<li><a href="customerCenter.do">고객센터</a></li>
+				</ul></li>
+			<c:if test="${!empty sid && sid != 'admin'}">
+
+				<li><a class="active" href="memberInfo.do">마이페이지</a>
+					<ul>
+						<li><a class="active" href="memberInfo.do">나의 정보</a></li>
+						<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+						<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${!empty sid && sid == 'admin'}">
+
+				<li><a href="userDelete.do">관리자페이지</a>
+					<ul>
+						<li><a href="userDelete.do">회원 관리</a></li>
+						<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${empty sid }">
+
+				<li class="btn-m"><a href="login.do"><i class="ti-lock"></i>
+						로그인</a></li>
+			</c:if>
+			<c:if test="${!empty sid }">
+				<li class="btn-m"><a href="logout_ok.do"><i class="ti-lock"></i>
+						로그아웃</a></li>
+			</c:if>
+		</ul>
+		<!-- Mobile Menu End -->
+	</nav>
+</div>	</div>
 	<!-- Header Section End -->
 	<!-- Page Header Start -->
 	<div class="page-header"
@@ -81,38 +229,33 @@
 			<div class="row">
 				<div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-6">
 					<div class="">
-						<form class="form-ad">
+						<form action="memberEdit_ok.do" method="post" class="form-ad">
 							<div class="form-group">
-								<label class="control-label">아이디</label> <input
-									type="text" class="form-control" placeholder="hongildong" readonly="readonly">
+								<label class="control-label">아이디</label> 
+								<input type="text" class="form-control" value="${to.uid }" readonly="readonly" name="id" id="id">
 							</div>
-							<div class="form-group">
-								<label class="control-label">이름</label> <input
-									type="text" class="form-control" placeholder="홍길동" readonly="readonly">
-							</div>
-							<div class="form-group">
-								<label class="control-label">비밀번호</label>
-								<input type="password" class="form-control" placeholder="비밀번호">
-							</div>
-							<div class="form-group">
-								<label class="control-label">비밀번호 확인 </label>
-								<input type="password" class="form-control" placeholder="비밀번호 확인">
-							</div>							
-							<div class="form-group">
-								<label class="control-label">생년월일 </label>
-								<input type="text" class="form-control" placeholder="yyyy-mm-dd">
-							</div>	
 							<div class="form-group">
 								<label class="control-label">이메일 </label>
-								<input type="text" class="form-control" placeholder="honggildong@email.com">
+								<input type="text" class="form-control" value="${to.uemail }" readonly="readonly" name="email" id=>
+							</div>		
+							<div class="form-group">
+								<label class="control-label">이름</label> 
+								<input type="text" class="form-control" value="${to.uname}" name="name" id="name">
 							</div>			
 							<div class="form-group">
-								<label class="control-label">전화번호 </label>
-								<input type="text" class="form-control" placeholder="010-1234-1234">
-							</div>											
-							<div>													
-							<a href="memberInfo.do" class="btn btn-common pull-right">나의 정보 수정 완료</a>
-						</div>						
+								<label class="control-label">생년월일 (선택)</label>
+								<input type="text" class="form-control" value="${to.ubirth }" name="birth" id="birth">
+							</div>		
+							<div class="form-group">
+								<label class="control-label">전화번호 (선택)</label>
+								<input type="text" class="form-control" value="${to.uphone }" name="phone" id="phone">
+							</div>					
+							<hr/>						
+							<div class="form-group">
+								<label class="control-label">비밀번호</label>
+								<input type="password" class="form-control" placeholder="비밀번호" name="pwd" id="pwd">
+							</div>												
+							<input type="submit" id="change_btn" class="btn btn-common pull-right" value="완료">						
 						</form>
 					</div>
 				</div>

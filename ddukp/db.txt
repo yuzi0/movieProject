@@ -1,0 +1,635 @@
+use moviep
+-- User
+CREATE TABLE `member` (
+	`unum`   INT(5)      NOT NULL, -- 회원번호
+	`uid`    VARCHAR(12) NOT NULL, -- 아이디
+	`uname`  VARCHAR(20) NOT NULL, -- 이름
+	`upwd`   VARCHAR(20) NOT NULL, -- 비밀번호
+	`uemail` VARCHAR(30) NOT NULL, -- 이메일
+	`ubirth` VARCHAR(8)  NULL,     -- 생년월일
+	`uphone` VARCHAR(11) NULL,     -- 전화번호
+	`udate`  DATETIME    NULL      -- 가입일시
+);
+
+-- User
+ALTER TABLE `member`
+	ADD CONSTRAINT `PK_member` -- User 기본키
+		PRIMARY KEY (
+			`unum` -- 회원번호
+		);
+
+-- User 유니크 인덱스
+CREATE UNIQUE INDEX `UIX_member`
+	ON `member` ( -- User
+		`uemail` ASC, -- 이메일
+		`uid` ASC     -- 아이디
+	);
+
+ALTER TABLE `member`
+	MODIFY COLUMN `unum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 관리자
+CREATE TABLE `admin` (
+	`anum`   INT(5)      NOT NULL, -- 관리자번호
+	`aid`    VARCHAR(12) NOT NULL, -- 아이디
+	`apwd`   VARCHAR(20) NOT NULL, -- 비밀번호
+	`aemail` VARCHAR(30) NOT NULL, -- 이메일
+	`adate`  DATETIME    NULL      -- 가입일시
+);
+
+-- 관리자
+ALTER TABLE `admin`
+	ADD CONSTRAINT `PK_admin` -- 관리자 기본키
+		PRIMARY KEY (
+			`anum` -- 관리자번호
+		);
+
+-- 관리자 유니크 인덱스
+CREATE UNIQUE INDEX `UIX_admin`
+	ON `admin` ( -- 관리자
+		`aemail` ASC, -- 이메일
+		`aid` ASC     -- 아이디
+	);
+
+ALTER TABLE `admin`
+	MODIFY COLUMN `anum` INT(5) NOT NULL AUTO_INCREMENT;
+-- 영화리스트
+CREATE TABLE `movie_list` (
+	`mlnum`     INT(5)       NOT NULL, -- 영화번호
+	`mlsubject` VARCHAR(250) NOT NULL, -- 영화제목
+	`mlsore`    VARCHAR(10)  NOT NULL, -- 영화평점
+	`mlimg`     VARCHAR(500) NOT NULL, -- 영화이미지
+	`mlgenre`   VARCHAR(100) NOT NULL, -- 영화장르
+	`mlhit`     INT(10)      NOT NULL  -- 영화조회수
+);
+
+-- 영화리스트
+ALTER TABLE `movie_list`
+	ADD CONSTRAINT `PK_movie_list` -- 영화리스트 기본키
+		PRIMARY KEY (
+			`mlnum` -- 영화번호
+		);
+
+ALTER TABLE `movie_list`
+	MODIFY COLUMN `mlnum` INT(5) NOT NULL AUTO_INCREMENT;
+-- 후기카테고리
+CREATE TABLE `rcategory` (
+	`ctgname` VARCHAR(5) NOT NULL -- 카테고리명
+);
+
+-- 후기카테고리
+ALTER TABLE `rcategory`
+	ADD CONSTRAINT `PK_rcategory` -- 후기카테고리 기본키
+		PRIMARY KEY (
+			`ctgname` -- 카테고리명
+		);    
+    
+    -- 후기게시판
+CREATE TABLE `review_board` (
+	`rnum`     INT(5)       NOT NULL, -- 글번호
+	`rsubject` VARCHAR(250) NOT NULL, -- 제목
+	`rcontent` VARCHAR(500) NOT NULL, -- 내용
+	`rhit`     INT(5)       NOT NULL, -- 조회수
+	`rdate`    DATETIME     NOT NULL, -- 등록일자
+	`rip`      VARCHAR(15)  NOT NULL, -- 아이피
+	`unum`     INT(5)       NULL,     -- 회원번호
+	`ctgname`  VARCHAR(5)   NOT NULL, -- 카테고리명
+	`mlnum`    INT(5)       NOT NULL  -- 영화번호
+);
+
+-- 후기게시판
+ALTER TABLE `review_board`
+	ADD CONSTRAINT `PK_review_board` -- 후기게시판 기본키
+		PRIMARY KEY (
+			`rnum` -- 글번호
+		);
+
+ALTER TABLE `review_board`
+	MODIFY COLUMN `rnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 후기게시판
+ALTER TABLE `review_board`
+	ADD CONSTRAINT `FK_member_TO_review_board` -- User -> 후기게시판
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+
+-- 후기게시판
+ALTER TABLE `review_board`
+	ADD CONSTRAINT `FK_rcategory_TO_review_board` -- 후기카테고리 -> 후기게시판
+		FOREIGN KEY (
+			`ctgname` -- 카테고리명
+		)
+		REFERENCES `rcategory` ( -- 후기카테고리
+			`ctgname` -- 카테고리명
+		);
+
+-- 후기게시판
+ALTER TABLE `review_board`
+	ADD CONSTRAINT `FK_movie_list_TO_review_board` -- 영화리스트 -> 후기게시판
+		FOREIGN KEY (
+			`mlnum` -- 영화번호
+		)
+		REFERENCES `movie_list` ( -- 영화리스트
+			`mlnum` -- 영화번호
+		);
+        
+        -- 후기게시판 댓글
+CREATE TABLE `review_comment` (
+	`rcnum`     INT(5)       NOT NULL, -- 댓글번호
+	`rccontent` VARCHAR(250) NOT NULL, -- 댓글내용
+	`rcip`      VARCHAR(15)  NOT NULL, -- 댓글아이피
+	`rcdate`    DATETIME     NOT NULL, -- 날짜
+	`rnum`      INT(5)       NOT NULL, -- 글번호
+	`unum`      INT(5)       NULL      -- 회원번호
+);
+
+-- 후기게시판 댓글
+ALTER TABLE `review_comment`
+	ADD CONSTRAINT `PK_review_comment` -- 후기게시판 댓글 기본키
+		PRIMARY KEY (
+			`rcnum` -- 댓글번호
+		);
+
+ALTER TABLE `review_comment`
+	MODIFY COLUMN `rcnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 후기게시판 댓글
+ALTER TABLE `review_comment`
+	ADD CONSTRAINT `FK_review_board_TO_review_comment` -- 후기게시판 -> 후기게시판 댓글
+		FOREIGN KEY (
+			`rnum` -- 글번호
+		)
+		REFERENCES `review_board` ( -- 후기게시판
+			`rnum` -- 글번호
+		);
+
+-- 후기게시판 댓글
+ALTER TABLE `review_comment`
+	ADD CONSTRAINT `FK_member_TO_review_comment` -- User -> 후기게시판 댓글
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+        
+        -- 자유카테고리
+CREATE TABLE `fcategory` (
+	`fctgname` VARCHAR(10) NOT NULL -- 카테고리명
+);
+
+-- 자유카테고리
+ALTER TABLE `fcategory`
+	ADD CONSTRAINT `PK_fcategory` -- 자유카테고리 기본키
+		PRIMARY KEY (
+			`fctgname` -- 카테고리명
+		);
+        
+        -- 문의사항카테고리
+CREATE TABLE `qcategory` (
+	`qctgname` VARCHAR(10) NOT NULL -- 카테고리명
+);
+
+-- 문의사항카테고리
+ALTER TABLE `qcategory`
+	ADD CONSTRAINT `PK_qcategory` -- 문의사항카테고리 기본키
+		PRIMARY KEY (
+			`qctgname` -- 카테고리명
+		);
+        
+        -- 공지카테고리
+CREATE TABLE `icategory` (
+	`ictgname` VARCHAR(10) NOT NULL -- 카테고리명
+);
+
+-- 공지카테고리
+ALTER TABLE `icategory`
+	ADD CONSTRAINT `PK_icategory` -- 공지카테고리 기본키
+		PRIMARY KEY (
+			`ictgname` -- 카테고리명
+		);
+        
+-- 자유게시판
+CREATE TABLE `free_board` (
+	`fnum`     INT(5)       NOT NULL, -- 글번호
+	`fsubject` VARCHAR(250) NOT NULL, -- 제목
+	`fcontent` VARCHAR(500) NOT NULL, -- 내용
+	`fhit`     INT(5)       NOT NULL, -- 조회수
+	`fdate`    DATETIME     NOT NULL, -- 등록일자
+	`fip`      VARCHAR(15)  NOT NULL, -- 아이피
+	`unum`     INT(5)       NULL,     -- 회원번호
+	`fctgname` VARCHAR(10)  NOT NULL  -- 카테고리명
+);
+
+-- 자유게시판
+ALTER TABLE `free_board`
+	ADD CONSTRAINT `PK_free_board` -- 자유게시판 기본키
+		PRIMARY KEY (
+			`fnum` -- 글번호
+		);
+
+ALTER TABLE `free_board`
+	MODIFY COLUMN `fnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 자유게시판
+ALTER TABLE `free_board`
+	ADD CONSTRAINT `FK_member_TO_free_board` -- User -> 자유게시판
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+
+-- 자유게시판
+ALTER TABLE `free_board`
+	ADD CONSTRAINT `FK_fcategory_TO_free_board` -- 자유카테고리 -> 자유게시판
+		FOREIGN KEY (
+			`fctgname` -- 카테고리명
+		)
+		REFERENCES `fcategory` ( -- 자유카테고리
+			`fctgname` -- 카테고리명
+		);        
+        -- 자유게시판 댓글
+CREATE TABLE `free_comment` (
+	`fcnum`     INT(5)       NOT NULL, -- 댓글번호
+	`fccontent` VARCHAR(250) NOT NULL, -- 댓글내용
+	`fcip`      VARCHAR(15)  NOT NULL, -- 댓글아이피
+	`fcdate`    DATETIME     NOT NULL, -- 날짜
+	`fnum`      INT(5)       NOT NULL, -- 글번호
+	`unum`      INT(5)       NULL      -- 회원번호
+);
+
+-- 자유게시판 댓글
+ALTER TABLE `free_comment`
+	ADD CONSTRAINT `PK_free_comment` -- 자유게시판 댓글 기본키
+		PRIMARY KEY (
+			`fcnum` -- 댓글번호
+		);
+
+ALTER TABLE `free_comment`
+	MODIFY COLUMN `fcnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 자유게시판 댓글
+ALTER TABLE `free_comment`
+	ADD CONSTRAINT `FK_free_board_TO_free_comment` -- 자유게시판 -> 자유게시판 댓글
+		FOREIGN KEY (
+			`fnum` -- 글번호
+		)
+		REFERENCES `free_board` ( -- 자유게시판
+			`fnum` -- 글번호
+		);
+
+-- 자유게시판 댓글
+ALTER TABLE `free_comment`
+	ADD CONSTRAINT `FK_member_TO_free_comment` -- User -> 자유게시판 댓글
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+        
+        -- 문의사항
+CREATE TABLE `qna_board` (
+	`qnum`     INT(5)       NOT NULL, -- 글번호
+	`qsubject` VARCHAR(250) NOT NULL, -- 제목
+	`qcontent` VARCHAR(500) NOT NULL, -- 내용
+	`qhit`     INT(5)       NOT NULL, -- 조회수
+	`qdate`    DATETIME     NOT NULL, -- 등록일자
+	`qip`      VARCHAR(15)  NOT NULL, -- 아이피
+	`unum`     INT(5)       NULL,     -- 회원번호
+	`qctgname` VARCHAR(10)  NOT NULL  -- 카테고리명
+);
+
+-- 문의사항
+ALTER TABLE `qna_board`
+	ADD CONSTRAINT `PK_qna_board` -- 문의사항 기본키
+		PRIMARY KEY (
+			`qnum` -- 글번호
+		);
+
+ALTER TABLE `qna_board`
+	MODIFY COLUMN `qnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 문의사항
+ALTER TABLE `qna_board`
+	ADD CONSTRAINT `FK_member_TO_qna_board` -- User -> 문의사항
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+
+-- 문의사항
+ALTER TABLE `qna_board`
+	ADD CONSTRAINT `FK_qcategory_TO_qna_board` -- 문의사항카테고리 -> 문의사항
+		FOREIGN KEY (
+			`qctgname` -- 카테고리명
+		)
+		REFERENCES `qcategory` ( -- 문의사항카테고리
+			`qctgname` -- 카테고리명
+		);
+        
+        -- 문의사항 댓글
+CREATE TABLE `qna_comment` (
+	`qcnum`     INT(5)       NOT NULL, -- 댓글번호
+	`qccontent` VARCHAR(250) NOT NULL, -- 댓글내용
+	`qcip`      VARCHAR(15)  NOT NULL, -- 댓글아이피
+	`qcdate`    DATETIME     NOT NULL, -- 날짜
+	`qnum`      INT(5)       NOT NULL, -- 글번호
+	`unum`      INT(5)       NULL,     -- 회원번호
+	`anum`      INT(5)       NULL      -- 관리자번호
+);
+
+-- 문의사항 댓글
+ALTER TABLE `qna_comment`
+	ADD CONSTRAINT `PK_qna_comment` -- 문의사항 댓글 기본키
+		PRIMARY KEY (
+			`qcnum` -- 댓글번호
+		);
+
+ALTER TABLE `qna_comment`
+	MODIFY COLUMN `qcnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 문의사항 댓글
+ALTER TABLE `qna_comment`
+	ADD CONSTRAINT `FK_qna_board_TO_qna_comment` -- 문의사항 -> 문의사항 댓글
+		FOREIGN KEY (
+			`qnum` -- 글번호
+		)
+		REFERENCES `qna_board` ( -- 문의사항
+			`qnum` -- 글번호
+		);
+
+-- 문의사항 댓글
+ALTER TABLE `qna_comment`
+	ADD CONSTRAINT `FK_member_TO_qna_comment` -- User -> 문의사항 댓글
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+
+-- 문의사항 댓글
+ALTER TABLE `qna_comment`
+	ADD CONSTRAINT `FK_admin_TO_qna_comment` -- 관리자 -> 문의사항 댓글
+		FOREIGN KEY (
+			`anum` -- 관리자번호
+		)
+		REFERENCES `admin` ( -- 관리자
+			`anum` -- 관리자번호
+		);
+        
+show tables;
+-- 공지사항
+CREATE TABLE `info_board` (
+	`inum`     INT(5)       NOT NULL, -- 글번호
+	`isubject` VARCHAR(250) NOT NULL, -- 제목
+	`icontent` VARCHAR(500) NOT NULL, -- 내용
+	`ihit`     INT(5)       NOT NULL, -- 조회수
+	`idate`    DATETIME     NOT NULL, -- 등록일자
+	`iip`      VARCHAR(15)  NOT NULL, -- 아이피
+	`anum`     INT(5)       NOT NULL, -- 관리자번호
+	`ictgname` VARCHAR(10)  NOT NULL  -- 카테고리명
+);
+
+-- 공지사항
+ALTER TABLE `info_board`
+	ADD CONSTRAINT `PK_info_board` -- 공지사항 기본키
+		PRIMARY KEY (
+			`inum` -- 글번호
+		);
+
+ALTER TABLE `info_board`
+	MODIFY COLUMN `inum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 공지사항
+ALTER TABLE `info_board`
+	ADD CONSTRAINT `FK_admin_TO_info_board` -- 관리자 -> 공지사항
+		FOREIGN KEY (
+			`anum` -- 관리자번호
+		)
+		REFERENCES `admin` ( -- 관리자
+			`anum` -- 관리자번호
+		);
+
+-- 공지사항
+ALTER TABLE `info_board`
+	ADD CONSTRAINT `FK_icategory_TO_info_board` -- 공지카테고리 -> 공지사항
+		FOREIGN KEY (
+			`ictgname` -- 카테고리명
+		)
+		REFERENCES `icategory` ( -- 공지카테고리
+			`ictgname` -- 카테고리명
+		);
+        
+        -- 공지사항 댓글
+CREATE TABLE `info_comment` (
+	`icnum`     INT(5)       NOT NULL, -- 댓글번호
+	`iccontent` VARCHAR(250) NOT NULL, -- 댓글내용
+	`icip`      VARCHAR(15)  NOT NULL, -- 댓글아이피
+	`icdate`    DATETIME     NOT NULL, -- 날짜
+	`inum`      INT(5)       NOT NULL, -- 글번호
+	`unum`      INT(5)       NULL      -- 회원번호
+);
+
+-- 공지사항 댓글
+ALTER TABLE `info_comment`
+	ADD CONSTRAINT `PK_info_comment` -- 공지사항 댓글 기본키
+		PRIMARY KEY (
+			`icnum` -- 댓글번호
+		);
+
+ALTER TABLE `info_comment`
+	MODIFY COLUMN `icnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 공지사항 댓글
+ALTER TABLE `info_comment`
+	ADD CONSTRAINT `FK_info_board_TO_info_comment` -- 공지사항 -> 공지사항 댓글
+		FOREIGN KEY (
+			`inum` -- 글번호
+		)
+		REFERENCES `info_board` ( -- 공지사항
+			`inum` -- 글번호
+		);
+
+-- 공지사항 댓글
+ALTER TABLE `info_comment`
+	ADD CONSTRAINT `FK_member_TO_info_comment` -- User -> 공지사항 댓글
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+        
+        -- 컬럼게시판
+CREATE TABLE `column_board` (
+	`cnum`     INT(5)       NOT NULL, -- 글번호
+	`csubject` VARCHAR(250) NOT NULL, -- 제목
+	`ccontent` VARCHAR(500) NOT NULL, -- 내용
+	`chit`     INT(5)       NOT NULL, -- 조회수
+	`cdate`    DATETIME     NOT NULL, -- 등록일자
+	`cip`      VARCHAR(15)  NOT NULL, -- 아이피
+	`unum`     INT(5)       NULL,     -- 회원번호
+	`mlnum`    INT(5)       NOT NULL  -- 영화번호
+);
+
+-- 컬럼게시판
+ALTER TABLE `column_board`
+	ADD CONSTRAINT `PK_column_board` -- 컬럼게시판 기본키
+		PRIMARY KEY (
+			`cnum` -- 글번호
+		);
+
+ALTER TABLE `column_board`
+	MODIFY COLUMN `cnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 컬럼게시판
+ALTER TABLE `column_board`
+	ADD CONSTRAINT `FK_member_TO_column_board` -- User -> 컬럼게시판
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+
+-- 컬럼게시판
+ALTER TABLE `column_board`
+	ADD CONSTRAINT `FK_movie_list_TO_column_board` -- 영화리스트 -> 컬럼게시판
+		FOREIGN KEY (
+			`mlnum` -- 영화번호
+		)
+		REFERENCES `movie_list` ( -- 영화리스트
+			`mlnum` -- 영화번호
+		);
+        
+        -- 컬럼게시판 댓글
+CREATE TABLE `column_comment` (
+	`ccnum`     INT(5)       NOT NULL, -- 댓글번호
+	`cccontent` VARCHAR(250) NOT NULL, -- 댓글내용
+	`ccip`      VARCHAR(15)  NOT NULL, -- 댓글아이피
+	`ccdate`    DATETIME     NOT NULL, -- 날짜
+	`cnum`      INT(5)       NOT NULL, -- 글번호
+	`unum`      INT(5)       NULL      -- 회원번호
+);
+
+-- 컬럼게시판 댓글
+ALTER TABLE `column_comment`
+	ADD CONSTRAINT `PK_column_comment` -- 컬럼게시판 댓글 기본키
+		PRIMARY KEY (
+			`ccnum` -- 댓글번호
+		);
+
+ALTER TABLE `column_comment`
+	MODIFY COLUMN `ccnum` INT(5) NOT NULL AUTO_INCREMENT;
+
+-- 컬럼게시판 댓글
+ALTER TABLE `column_comment`
+	ADD CONSTRAINT `FK_column_board_TO_column_comment` -- 컬럼게시판 -> 컬럼게시판 댓글
+		FOREIGN KEY (
+			`cnum` -- 글번호
+		)
+		REFERENCES `column_board` ( -- 컬럼게시판
+			`cnum` -- 글번호
+		);
+
+-- 컬럼게시판 댓글
+ALTER TABLE `column_comment`
+	ADD CONSTRAINT `FK_member_TO_column_comment` -- User -> 컬럼게시판 댓글
+		FOREIGN KEY (
+			`unum` -- 회원번호
+		)
+		REFERENCES `member` ( -- User
+			`unum` -- 회원번호
+		);
+        
+        
+        
+show tables;
+insert into admin (anum, aid, apwd, aemail,adate)  values (0, 'admin', '123456','admin@admin.com', now());
+insert into admin (anum, aid, apwd, aemail,adate)  values (0, 'moviepadmin', '123456','moviepadmin@admin.com', now());
+
+desc icategory
+delete from icategory where ictgname = '기타';
+
+
+insert into rcategory values('후기');
+insert into rcategory values('질문');
+insert into qcategory values('로그인/회원');
+insert into qcategory values('영화');
+insert into qcategory values('홈페이지');
+insert into qcategory values('기타');
+insert into icategory values('서비스 공지');
+insert into icategory values('컨텐츠 공지');
+insert into fcategory values('일상');
+insert into fcategory values('유머');
+insert into fcategory values('이슈');
+insert into fcategory values('연애');
+insert into fcategory values('기타');
+
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('jhj1997', '123456', '정현진', 'jhj1997@jhj.com','20190411','01058457889', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('asdf5025', '123456', '김삼순', 'asdf5025@asdf.com','20100510','01058573212', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('zzzz545', '123456', '배문배', 'zzzz545@zzzz.com','19970421','01096543321', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('zang92', '123456', '장기용', 'zang92@zang.com','19950321','01051123347', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('b1995', '123456', '배주현', 'b1995@bbb.com','19951225','01099874485', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('jyp1994', '123456', '박진영', 'jyp1994@jyp.com','19940922','01019940922', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('ijb0106', '123456', '임재범', 'ijb0106@ijb.com','19940106','01001061994', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member1', '123456', '팀장님', 'member1@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member2', '123456', '팀장님', 'member2@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member3', '123456', '팀장님', 'member3@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member4', '123456', '팀장님', 'member4@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member5', '123456', '팀장님', 'member5@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member6', '123456', '팀장님', 'member6@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member7', '123456', '팀장님', 'member7@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member8', '123456', '팀장님', 'member8@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member9', '123456', '팀장님', 'member9@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member10', '123456', '팀장님', 'member10@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member11', '123456', '팀장님', 'member11@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member12', '123456', '팀장님', 'member12@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member13', '123456', '팀장님', 'member13@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member14', '123456', '팀장님', 'member14@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member15', '123456', '팀장님', 'member15@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member16', '123456', '팀장님', 'member16@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member17', '123456', '팀장님', 'member17@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member18', '123456', '팀장님', 'member18@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member19', '123456', '팀장님', 'member19@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member20', '123456', '팀장님', 'member20@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member21', '123456', '팀장님', 'member21@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member22', '123456', '팀장님', 'member22@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member23', '123456', '팀장님', 'member23@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member24', '123456', '팀장님', 'member24@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member25', '123456', '팀장님', 'member25@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member26', '123456', '팀장님', 'member26@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member27', '123456', '팀장님', 'member27@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member28', '123456', '팀장님', 'member28@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member29', '123456', '팀장님', 'member29@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member30', '123456', '팀장님', 'member30@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member31', '123456', '팀장님', 'member31@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member32', '123456', '팀장님', 'member32@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member33', '123456', '팀장님', 'member33@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member34', '123456', '팀장님', 'member34@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member35', '123456', '팀장님', 'member35@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member36', '123456', '팀장님', 'member36@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member37', '123456', '팀장님', 'member37@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member38', '123456', '팀장님', 'member38@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member39', '123456', '팀장님', 'member39@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member40', '123456', '팀장님', 'member40@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member41', '123456', '팀장님', 'member41@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member42', '123456', '팀장님', 'member42@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member43', '123456', '팀장님', 'member43@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member44', '123456', '팀장님', 'member44@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member45', '123456', '팀장님', 'member45@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member46', '123456', '팀장님', 'member46@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member47', '123456', '팀장님', 'member47@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member48', '123456', '팀장님', 'member48@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member49', '123456', '팀장님', 'member49@member.com','20190411','01012341234', now());
+insert into member (uid, upwd, uname, uemail, ubirth, uphone, udate)  values ('member50', '123456', '팀장님', 'member50@member.com','20190411','01012341234', now());

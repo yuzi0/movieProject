@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +38,7 @@
 <!-- Slicknav js -->
 <link rel="stylesheet" href="./assets/css/slicknav.css" type="text/css">
 <!-- Main Styles -->
-<link rel="stylesheet" href="./assets/css/main2.css" type="text/css"> 
+<link rel="stylesheet" href="./assets/css/main2.css" type="text/css">
 <!-- Responsive CSS Styles -->
 <link rel="stylesheet" href="./assets/css/responsive.css"
 	type="text/css">
@@ -60,54 +61,48 @@
 			<section id="testimonial" class="section">
 				<div class="container">
 					<div class="row">
-						<div class="touch-slider" class="owl-carousel owl-theme">
-							<div class="item active text-center">
-								<img class="img-member" src="assets/img/testimonial/img1.jpg"
-									alt="">
+						<div class="touch-slider">
+							<div class="item active text-center main-slider"
+								style="background-image: url(assets/img/main/main1.jpg);">
+								<br /> <br />
+								<p>
+									<i class="fa fa-quote-left quote-left"></i> 난 인생의 위기가 좋아 <i
+										class="fa fa-quote-right quote-right"></i><br> 인생이 나에게
+									날리는 펀치를 계속 맞는거야<br /> 그러다 코너에 몰린 순간 결정적인 반격의 펀치를 날리는거지
+								</p>
 								<div class="client-info">
 									<h2 class="client-name">
-										Jessica <span>(Senior Accountant)</span>
+										라라랜드 <span>(2016)</span>
 									</h2>
 								</div>
-								<p>
-									<i class="fa fa-quote-left quote-left"></i> The team that was
-									assigned to our project... were extremely professional <i
-										class="fa fa-quote-right quote-right"></i><br> throughout
-									the project and assured that the owner expectations were met
-									and <br> often exceeded.
-								</p>
 							</div>
-							<div class="item text-center">
-								<img class="img-member" src="assets/img/testimonial/img2.jpg"
-									alt="">
+							<div class="item text-center main-slider"
+								style="background-image: url(assets/img/main/main2.jpg);">
+								<br /> <br />
+								<p>
+									<i class="fa fa-quote-left quote-left"></i> 그녀를 잃는다면 감당할 수 있겠소?
+									<i class="fa fa-quote-right quote-right"></i><br> 그럼 답이
+									나왔군. <br /> 계산없이 사랑하시오.
+								</p>
 								<div class="client-info">
 									<h2 class="client-name">
-										John Doe <span>(Project Menager)</span>
+										이프 온리 <span>(2004)</span>
 									</h2>
 								</div>
-								<p>
-									<i class="fa fa-quote-left quote-left"></i> The team that was
-									assigned to our project... were extremely professional <i
-										class="fa fa-quote-right quote-right"></i><br> throughout
-									the project and assured that the owner expectations were met
-									and <br> often exceeded.
-								</p>
 							</div>
-							<div class="item text-center">
-								<img class="img-member" src="assets/img/testimonial/img3.jpg"
-									alt="">
+							<div class="item text-center  main-slider"
+								style="background-image: url(assets/img/main/main3.jpg);">
+								<br /> <br />
+								<p>
+									<i class="fa fa-quote-left quote-left"></i> 모든 일에는 끝이 있어. <i
+										class="fa fa-quote-right quote-right"></i><br> 그래서 시간이 더
+									소중하게 느껴지는거야.
+								</p>
 								<div class="client-info">
 									<h2 class="client-name">
-										Helen <span>(Engineer)</span>
+										비포선라이즈 <span>(1955)</span>
 									</h2>
 								</div>
-								<p>
-									<i class="fa fa-quote-left quote-left"></i> The team that was
-									assigned to our project... were extremely professional <i
-										class="fa fa-quote-right quote-right"></i><br> throughout
-									the project and assured that the owner expectations were met
-									and <br> often exceeded.
-								</p>
 							</div>
 						</div>
 					</div>
@@ -118,180 +113,37 @@
 		<!-- end intro section -->
 	</div>
 
-
 	<!-- Featured Jobs Section Start -->
 	<section class="featured-jobs section">
 		<div class="container">
 			<h2 class="section-title">인기 영화 목록</h2>
+	
 			<div class="row">
-				<div class="col-md-3 col-sm-6 col-xs-12">
+			<c:forEach items="${msLTO.movieallList}" var="to">
+		
+				<div class="col-md-3 col-sm-4 col-xs-6">
 					<div class="featured-item">
 						<div class="featured-wrap">
 							<div class="featured-inner">
 								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-1.jpg" alt="">
+									<a class="hover-effect" href="movieSortView.do?movie=${to.mnum }"> <img
+										src="<c:url value='${to.img}'/>" alt=""> 
 									</a>
 								</figure>
 								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Graphic Designer</a>
+									<h3 class="job-title" id="msub">
+										<a href="job-page.html">${to.msubject}</a>
 									</h3>
 									<div class="adderess">
-										<i class="ti-location-pin"></i> Dallas, United States
+										<i class="ti-location-pin">${to.genre}</i> 
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-2.jpg" alt="">
-									</a>
-								</figure>
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Software Engineer</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> Delaware, United States
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-3.jpg" alt="">
-									</a>
-								</figure>
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Managing Director</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> NY, United States
-									</div>
-								</div>
-							</div>
-						</div> 
-					</div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-3.jpg" alt="">
-									</a>
-								</figure>
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Graphic Designer</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> Washington, United States
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-2.jpg" alt="">
-									</a>
-								</figure>
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Software Engineer</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> Dallas, United States
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-1.jpg" alt="">
-									</a>
-								</figure> 
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Managing Director</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> NY, United States
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>				
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-2.jpg" alt="">
-									</a>
-								</figure>
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Software Engineer</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> Dallas, United States
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12">
-					<div class="featured-item">
-						<div class="featured-wrap">
-							<div class="featured-inner">
-								<figure class="item-thumb">
-									<a class="hover-effect" href="job-page.html"> <img
-										src="assets/img/features/img-1.jpg" alt="">
-									</a>
-								</figure>
-								<div class="item-body">
-									<h3 class="job-title">
-										<a href="job-page.html">Managing Director</a>
-									</h3>
-									<div class="adderess">
-										<i class="ti-location-pin"></i> NY, United States
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+			</c:forEach>
+			
 				<div>
 					<a href="movieSortList.do" class="pull-right">더 보기</a>
 				</div>
@@ -318,80 +170,35 @@
 	<section id="blog" class="section">
 		<!-- Container Starts -->
 		<div class="container">
+			<br /> <br />
 			<h2 class="section-title">인기 칼럼</h2>
 			<div class="row">
+			<c:forEach items="${lLTO.columnList}" var="to">
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 blog-item">
 					<!-- Blog Item Starts -->
 					<div class="blog-item-wrapper">
 						<div class="blog-item-img">
-							<a href="columnView.do"> <img
-								src="assets/img/blog/home-items/img1.jpg" alt="">
+							<a href="columnView.do?cnum=${to.cnum }"> <img src="${to.cimg }" alt="" style="hegith:auto">
 							</a>
 						</div>
 						<div class="blog-item-text">
 							<div class="meta-tags">
-								<span class="date"><i class="ti-calendar"></i> 12, 20,
-									2017</span> <span class="comments"><a href="#"><i
-										class="ti-comment-alt"></i> 댓글: 5</a></span>
+								<span class="date">
+									<i class="ti-calendar"></i> 
+									${ to.cdate}
+								</span> 
+								<span class="comments">
+									<a href="#"><i class="ti-comment-alt"></i> 조회수: ${to.chit}</a>
+								</span>
 							</div>
-							<a href="columnView.do">
-								<h3>엑시트 무엇인 인기를 끌었나
-								</h3>
-							</a>
-							<p>조정석의 얼굴이 너무 잘생겼다 보는내내 용남아ㅠㅠ하면서 울었따</p>
-							<a href="columnView.do" class="btn btn-common btn-rm">보러가기</a>
+							<a href="columnView.do?cnum=${to.cnum }"> <h3>${ to.csubject}</h3> </a>
+							<div style="overflow:hidden"><p>${ to.ccontent}</p></div>
+							<a href="columnView.do?cnum=${to.cnum }" class="btn btn-common btn-rm">보러가기</a>
 						</div>
 					</div>
 					<!-- Blog Item Wrapper Ends-->
 				</div>
-				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 blog-item">
-					<!-- Blog Item Starts -->
-					<div class="blog-item-wrapper">
-						<div class="blog-item-img">
-							<a href="columnView.do"> <img
-								src="assets/img/blog/home-items/img1.jpg" alt="">
-							</a>
-						</div>
-						<div class="blog-item-text">
-							<div class="meta-tags">
-								<span class="date"><i class="ti-calendar"></i> 12, 20,
-									2017</span> <span class="comments"><a href="#"><i
-										class="ti-comment-alt"></i> 댓글: 5</a></span>
-							</div>
-							<a href="columnView.do">
-								<h3>엑시트 무엇인 인기를 끌었나
-								</h3>
-							</a>
-							<p>조정석의 얼굴이 너무 잘생겼다 보는내내 용남아ㅠㅠ하면서 울었따</p>
-							<a href="columnView.do" class="btn btn-common btn-rm">보러가기</a>
-						</div>
-					</div>
-					<!-- Blog Item Wrapper Ends-->
-				</div>
-				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 blog-item">
-					<!-- Blog Item Starts -->
-					<div class="blog-item-wrapper">
-						<div class="blog-item-img">
-							<a href="columnView.do"> <img
-								src="assets/img/blog/home-items/img1.jpg" alt="">
-							</a>
-						</div>
-						<div class="blog-item-text">
-							<div class="meta-tags">
-								<span class="date"><i class="ti-calendar"></i> 12, 20,
-									2017</span> <span class="comments"><a href="#"><i
-										class="ti-comment-alt"></i> 댓글: 5</a></span>
-							</div>
-							<a href="columnView.do">
-								<h3>엑시트 무엇인 인기를 끌었나
-								</h3>
-							</a>
-							<p>조정석의 얼굴이 너무 잘생겼다 보는내내 용남아ㅠㅠ하면서 울었따</p>
-							<a href="columnView.do" class="btn btn-common btn-rm">보러가기</a>
-						</div>
-					</div>
-					<!-- Blog Item Wrapper Ends-->
-				</div> 
+			</c:forEach>
 			</div>
 		</div>
 	</section>

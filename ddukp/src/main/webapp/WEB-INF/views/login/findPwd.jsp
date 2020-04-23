@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +12,8 @@
 	content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
 <title>비밀번호 찾기</title>
 
+<script src="./resources/jquery-3.4.1.js"></script>
+<script src="./resources/jquery-3.4.1.min.js"></script>  
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="./assets/css/bootstrap.min.css"
@@ -48,14 +53,157 @@
 <link rel="stylesheet" type="text/css"
 	href="./assets/css/colors/red.css" media="screen" />
 
+<script type="text/javascript">
+	$(document).ready(function () {
+		/* 값이 입력됐는지 확인 과정 */
+		$("#findPwd_btn").on('click',function(){
+			if ($('input[name=id]').val() == '') {
+				alert('아이디를 입력해주세요.');
+				return false;
+			}
+			if ($('input[name=email]').val() == '') {
+				alert('이메일을 입력해주세요.');
+				return false;
+			}
+		});
+	});
+</script>
 
 
 </head>
 <body>
 	<!-- Header Section Start -->
 	<div class="header">
-		<%@include file="../nav2.jsp"%>
+<div class="logo-menu">
+	<nav class="navbar navbar-default main-navigation" role="navigation"
+		data-spy="affix" data-offset-top="50">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand logo" href="main.do"><img
+					src="./assets/img/logo.png" alt=""></a>
+			</div>
 
+			<div class="collapse navbar-collapse" id="navbar">
+				<!-- Start Navigation List -->
+				<ul class="nav navbar-nav">
+					<li><a href="introduceMoviep.do"> MOVIEP </a></li>
+					<li><a href="movieSortList.do"> 영화 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="movieSortList.do"> 장르별 영화 </a></li>
+						</ul></li>
+					<li><a href="freeList.do"> 커뮤니티 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="freeList.do"> 자유 게시판 </a></li>
+							<li><a href="columnList.do"> 칼럼 게시판 </a></li>
+							<li><a href="latterList.do"> 후기 게시판 </a></li>
+						</ul></li>
+					<li><a href="infoBoard.do"> Q & A <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="infoBoard.do"> 공지사항 </a></li>
+							<li><a href="customerCenter.do"> 고객센터 </a></li>
+						</ul></li>
+					<c:set var="sessionId" value="${sid}" />
+
+					<c:if test="${!empty sid}">
+						<c:choose>
+							<c:when test="${fn : contains(sessionId, 'admin')}">
+								<li><a href="userDelete.do"> 관리자페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="userDelete.do"> 회원 관리 </a></li>
+										<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+									</ul></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="memberInfo.do"> 마이페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="memberInfo.do"> 나의 정보 </a></li>
+										<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+										<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+									</ul></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</ul>
+				<ul class="nav navbar-nav navbar-right float-right">
+					<c:if test="${empty sid }">
+						<li class="right"><a href="login.do"><i class="ti-lock"></i>
+								로그인</a></li>
+					</c:if>
+					<c:if test="${!empty sid }">
+						<li class="right"><a href="logout_ok.do"><i
+								class="ti-lock"></i>로그아웃</a></li>
+					</c:if>
+				</ul>
+			</div>
+		</div>
+		<!-- Mobile Menu Start -->
+		<ul class="wpb-mobile-menu">
+			<li><a href="introduceMoviep.do">MOVIEP</a></li>
+			<li><a href="movieSortList.do">영화</a>
+				<ul>
+					<li><a href="movieSortList.do">장르별 영화</a></li>
+				</ul></li>
+			<li><a href="freeList.do">커뮤니티</a>
+				<ul>
+					<li><a href="freeList.do">자유 게시판</a></li>
+					<li><a href="columnList.do">칼럼 게시판</a></li>
+					<li><a href="latterList.do">후기 게시판</a></li>
+				</ul></li>
+			<li><a href="infoBoard.do">Q & A</a>
+				<ul>
+					<li><a href="infoBoard.do">공지사항</a></li>
+					<li><a href="customerCenter.do">고객센터</a></li>
+				</ul></li>
+			<c:if test="${!empty sid && sid != 'admin'}">
+
+				<li><a href="memberInfo.do">마이페이지</a>
+					<ul>
+						<li><a href="memberInfo.do">나의 정보</a></li>
+						<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+						<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${!empty sid && sid == 'admin'}">
+
+				<li><a href="userDelete.do">관리자페이지</a>
+					<ul>
+						<li><a href="userDelete.do">회원 관리</a></li>
+						<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${empty sid }">
+
+				<li class="btn-m"><a href="login.do"><i class="ti-lock"></i>
+						로그인</a></li>
+			</c:if>
+			<c:if test="${!empty sid }">
+				<li class="btn-m"><a href="logout_ok.do"><i class="ti-lock"></i>
+						로그아웃</a></li>
+			</c:if>
+		</ul>
+		<!-- Mobile Menu End -->
+	</nav>
+</div>
 	</div>
 	<!-- Header Section End -->
 
@@ -85,25 +233,19 @@
 					class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-6 cd-user-modal">
 					<div class="my-account-form">
 						<ul class="cd-switcher">
-							<li><a class="selected" href="findId.do">아이디 찾기</a></li>
-							<li><a href="findPwd.do">비밀번호 찾기</a></li>
+							<li><a href="findId.do">아이디 찾기</a></li>
+							<li><a class="selected" href="findPwd.do">비밀번호 찾기</a></li>
 						</ul>
 
 						<div class="page-login-form is-selected" id="cd-reset-password">
 							<p class="cd-form-message">
-								이름, 아이디, 이메일을 입력해주세요.
+								아이디, 이메일을 입력해주세요.
 							</p>
-							<form class="cd-form">
+							<form class="cd-form" action="findPwd_ok.do" method="post">
 								<div class="form-group">
 									<div class="input-icon">
 										<i class="ti-user"></i> <input type="text" id="sender-email"
-											class="form-control" name="email" placeholder="아이디">
-									</div>
-								</div>
-								<div class="form-group">								
-									<div class="input-icon">
-										<i class="ti-pencil"></i> <input type="text" id="sender-email"
-											class="form-control" name="email" placeholder="이름">
+											class="form-control" name="id" placeholder="아이디">
 									</div>
 								</div>
 								<div class="form-group">																							
@@ -113,7 +255,7 @@
 									</div>																		
 								</div>
 								<p class="fieldset">
-									<button class="btn btn-common log-btn" type="submit">비밀번호 찾기</button>
+									<button class="btn btn-common log-btn" type="submit" id="findPwd_btn">비밀번호 찾기</button>
 								</p>
 							</form>
 							<p class="cd-form-bottom-message">

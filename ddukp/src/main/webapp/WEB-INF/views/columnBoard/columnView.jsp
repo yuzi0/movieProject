@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+		<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+		<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+		
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,21 +52,282 @@
 <!-- Responsive CSS Styles -->
 <link rel="stylesheet" href="./assets/css/responsive.css"
 	type="text/css">
+
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
-
 <!-- Color CSS Styles  -->
 <link rel="stylesheet" type="text/css"
 	href="./assets/css/colors/red.css" media="screen" />
-<link rel="stylesheet" type="text/css"
-	href="./assets/css/lboard/fwrite.css" media="screen" />
 <title>후기게시판 상세페이지</title>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#btn-left1").on('click',function(){
+			var chk = confirm("정말 삭제하시겠습니까?");
+			if(chk){
+				location.href='columnDelete.do?cnum=${param.cnum}';
+			}
+		});
+
+		$("#list").on('click',function(){
+			var board = '${param.board}';
+			if(board == "column") {
+				//alert('${param.board}');
+				$("#list").attr("href", 'memberWrite.do?cpage=${param.cpage}');
+			}
+		});
+		
+		$("#csubmit").on('click',function(){
+			if ($('#comment').val() == '') {
+				alert('내용을 입력해주세요.');
+				return false;
+			}
+			$.ajax({
+				type : 'post',
+				url : 'columnCommentOk.do',
+				data : $('#cfrm').serialize(),
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				success : function(data) {
+					
+					if (data == 'success') {
+						alert('댓글 성공');
+
+						$('textarea[name=comment]').val('');
+						CommentList();
+					}
+					else {
+						alert('다시 시도해주세요.');
+					}
+
+				},
+				error : function(request,status,error){
+					alert("code:"
+							+ request.status
+							+ "\n"
+							+ "message:"
+							+ request.responseText
+							+ "\n"
+							+ "error:"
+							+ error);
+				}
+			});
+			
+		});
+	
+	
+	 CommentList();
+	 
+		function CommentList() {
+			$
+					.ajax({
+						type : 'get',
+						url : 'columnCommentList.do',
+						data : $('#cfrm').serialize(),
+						dataType : 'json',
+						contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+						success : function(data) {
+			
+							var chtml = "";
+							var num="<h3>"+(data.length-1)+" 개의 댓글</h3>"
+							if (data.length > 0) {
+								for (var i = 0; i < data.length-1; i++) {
+
+									chtml+="<li>";
+									chtml+="<div class='media'>";
+									chtml+="<div class='"+data[i].ccnum+"' id='com'>";
+									chtml+="<h5 class='name'>"+data[i].number+"</h5>";
+									chtml+="<p>"+data[i].comment+"</p>";
+									chtml+=	"<span class='comment-date'>"+data[i].ccdate+"</span>&nbsp;&nbsp;&nbsp;"; 
+									if(data[i].uid===('<%=session.getAttribute("sid")%>')||data[data.length-1].anum>0){
+										chtml+="<button type='button' id='deletebtn' class='reply-link'  style='border:none; background:none;'>삭제</button>"
+									}
+										chtml+="</div>";
+									chtml+="</div>";
+
+									chtml+="</li>";
+
+								}
+
+							}
+							$('#num').html(num);
+							$('.comments-list').html(chtml);
+
+						},
+						error : function(request,status,error){
+							alert("code:"
+									+ request.status
+									+ "\n"
+									+ "message:"
+									+ request.responseText
+									+ "\n"
+									+ "error:"
+									+ error);
+						}
+					});
+		}
+			$('.comments-list').on('click','#deletebtn',function(){
+				$.ajax({
+					type : 'get',
+					url : 'columnCommentDelete.do',
+					data :{ ccnum:$('#com').attr('class')},
+
+					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+					success : function(data) {
+			
+					if(data==='success'){
+						alert('삭제되었습니다');
+						CommentList();
+					}
+					else {
+						alert('다시 시도해주세요.');
+					}
+											},
+											error : function() {
+
+											}
+				})
+			})
+			
+
+		
+	});
+</script>
 </head>
+
+
 <body>
 	<!-- Header Section Start -->
 	<div class="header">
-		<%@include file="../nav2.jsp"%>
+<div class="logo-menu">
+	<nav class="navbar navbar-default main-navigation" role="navigation"
+		data-spy="affix" data-offset-top="50">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand logo" href="main.do"><img
+					src="./assets/img/logo.png" alt=""></a>
+			</div>
 
+			<div class="collapse navbar-collapse" id="navbar">
+				<!-- Start Navigation List -->
+				<ul class="nav navbar-nav">
+					<li><a href="introduceMoviep.do"> MOVIEP </a></li>
+					<li><a href="movieSortList.do"> 영화 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="movieSortList.do"> 장르별 영화 </a></li>
+						</ul></li>
+					<li><a class="active" href="freeList.do"> 커뮤니티 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="freeList.do"> 자유 게시판 </a></li>
+							<li><a class="active" href="columnList.do"> 칼럼 게시판 </a></li>
+							<li><a href="latterList.do"> 후기 게시판 </a></li>
+						</ul></li>
+					<li><a href="infoBoard.do"> Q & A <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="infoBoard.do"> 공지사항 </a></li>
+							<li><a href="customerCenter.do"> 고객센터 </a></li>
+						</ul></li>
+					<c:set var="sessionId" value="${sid}" />
+
+					<c:if test="${!empty sid}">
+						<c:choose>
+							<c:when test="${fn : contains(sessionId, 'admin')}">
+								<li><a href="userDelete.do"> 관리자페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="userDelete.do"> 회원 관리 </a></li>
+										<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+									</ul></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="memberInfo.do"> 마이페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="memberInfo.do"> 나의 정보 </a></li>
+										<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+										<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+									</ul></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</ul>
+				<ul class="nav navbar-nav navbar-right float-right">
+					<c:if test="${empty sid }">
+						<li class="right"><a href="login.do"><i class="ti-lock"></i>
+								로그인</a></li>
+					</c:if>
+					<c:if test="${!empty sid }">
+						<li class="right"><a href="logout_ok.do"><i
+								class="ti-lock"></i>로그아웃</a></li>
+					</c:if>
+				</ul>
+			</div>
+		</div>
+		<!-- Mobile Menu Start -->
+		<ul class="wpb-mobile-menu">
+			<li><a href="introduceMoviep.do">MOVIEP</a></li>
+			<li><a href="movieSortList.do">영화</a>
+				<ul>
+					<li><a href="movieSortList.do">장르별 영화</a></li>
+				</ul></li>
+			<li><a class="active" href="freeList.do">커뮤니티</a>
+				<ul>
+					<li><a href="freeList.do">자유 게시판</a></li>
+					<li><a class="active" href="columnList.do">칼럼 게시판</a></li>
+					<li><a href="latterList.do">후기 게시판</a></li>
+				</ul></li>
+			<li><a href="infoBoard.do">Q & A</a>
+				<ul>
+					<li><a href="infoBoard.do">공지사항</a></li>
+					<li><a href="customerCenter.do">고객센터</a></li>
+				</ul></li>
+			<c:if test="${!empty sid && sid != 'admin'}">
+
+				<li><a href="memberInfo.do">마이페이지</a>
+					<ul>
+						<li><a href="memberInfo.do">나의 정보</a></li>
+						<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+						<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${!empty sid && sid == 'admin'}">
+
+				<li><a href="userDelete.do">관리자페이지</a>
+					<ul>
+						<li><a href="userDelete.do">회원 관리</a></li>
+						<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${empty sid }">
+
+				<li class="btn-m"><a href="login.do"><i class="ti-lock"></i>
+						로그인</a></li>
+			</c:if>
+			<c:if test="${!empty sid }">
+				<li class="btn-m"><a href="logout_ok.do"><i class="ti-lock"></i>
+						로그아웃</a></li>
+			</c:if>
+		</ul>
+		<!-- Mobile Menu End -->
+	</nav>
+</div>
 	</div>
 	<!-- Header Section End -->
 
@@ -90,20 +354,30 @@
 					<table class="table table-borderless table-sm">
 
 						<tr>
-							<th class="col-md-4" style="text-align: center;">[카테고리] <b>제목</b></th>
-							<th class="col-md-4">날짜</th>
-							<th class="col-md-4">조회수</th>
+							<th class="col-md-5" style="text-align: center;">[${cTO.msubject }]&nbsp&nbsp&nbsp <b>${cTO.csubject }</b></th>
+							<th class="col-md-3" style="text-align: right;">${cTO.cdate }</th>
+							<th class="col-md-2" style="text-align: right;">${cTO.chit }</th>
+							<th class="col-md-2" style="text-align: right;">${cTO.commentNum}</th>
 						</tr>
 					</table>
 
-					<div>내용</div>
+					<div>${cTO.ccontent }</div>
 
 				</div>
 				<div class="col-md-12" style="padding-top: 30px">
-					<a href="columnList.do" class="btn btn-common pull-left">목록</a> <a
-						href="columnModify.do" class="btn btn-common pull-right">글 수정</a>
-					<a href="infoEdit.do" class="btn btn-common pull-right"
+					<a href="columnList.do?cpage=${param.cpage}" class="btn btn-common pull-left" id="list">목록</a> 
+					<c:if test="${!empty sid &&sid eq cTO.uid }">
+					
+					<a href='columnModify.do?cnum=${param.cnum}&cpage=${param.cpage}' class="btn btn-common pull-right">수정</a> 
+					 </c:if>
+					<%--  <c:if test="${sid eq lTO.uid }">
+					<a href="infoEdit.do?rnum=${param.rnum}&cpage=${param.cpage}" class="btn btn-common pull-right"
 						id="btn-left1">삭제</a>
+						</c:if> --%>
+						
+						 <c:if test="${(!empty sid && sid eq cTO.uid) || cTO.anum > 0}">
+					<button id="btn-left1" class="btn btn-common pull-right">삭제</button>
+						</c:if>
 				</div>
 			</div>
 
@@ -112,89 +386,28 @@
 
 		<div class="container">
 			<div id="comments" class="col-md-10 col-md-offset-1">
-				<h3>5 개의 댓글</h3>
+						<div id="num">
+				
+				</div>
 				<ol class="comments-list">
-					<li>
-						<div class="media">
-							<div>
-								<h4 class="name">Roy Fisher</h4>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-									Officia possimus dignissimos eveniet aliquid optio sit sint
-									fugit dolorem autem placeat nostrum deleniti nulla error,
-									dolores in dolorum illum, tempore, perferendis.</p>
-								<span class="comment-date">Mar 02, 2016</span> <a href="#"
-									class="reply-link">Reply</a>
-							</div>
-						</div>
-						<ul>
-							<li>
-								<div class="media">
-									<div class="">
-										<h4 class="name">Jane Smith</h4>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-											elit. Officia possimus dignissimos eveniet aliquid optio sit
-											sint fugit dolorem autem placeat nostrum deleniti nulla
-											error, dolores in dolorum illum, tempore, perferendis.</p>
-										<span class="comment-date">Mar 02, 2016</span> <a href="#"
-											class="reply-link">Reply</a>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<div class="media">
-							<div class="">
-								<h4 class="name">Nancy Watson</h4>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-									Officia possimus dignissimos eveniet aliquid optio sit sint
-									fugit dolorem autem placeat nostrum deleniti nulla error,
-									dolores in dolorum illum, tempore, perferendis.</p>
-								<span class="comment-date">Mar 02, 2016</span> <a href="#"
-									class="reply-link">Reply</a>
-							</div>
-						</div>
-						<ul>
-							<li>
-								<div class="media">
-									<div class="">
-										<h4 class="name">Diane Evans</h4>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-											elit. Officia possimus dignissimos eveniet aliquid optio sit
-											sint fugit dolorem autem placeat nostrum deleniti nulla
-											error, dolores in dolorum illum, tempore, perferendis.</p>
-										<span class="comment-date">Mar 02, 2016</span> <a href="#"
-											class="reply-link">Reply</a>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="media">
-									<div class="">
-										<h4 class="name">Amy Harper</h4>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing
-											elit. Officia possimus dignissimos eveniet aliquid optio sit
-											sint fugit dolorem autem placeat nostrum deleniti nulla
-											error, dolores in dolorum illum, tempore, perferendis.</p>
-										<span class="comment-date">Mar 02, 2016</span> <a href="#"
-											class="reply-link">Reply</a>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</li>
+				
+					
 				</ol>
 
 				<div id="respond">
 					<h2 class="respond-title">댓글달기</h2>
-					<form action="#">
+					<form id="cfrm" method="post" name="cfrm">
+					<input type="hidden" name="cnum" value="${cTO.cnum}"> 
+					<input  type="hidden" name="cpage" value="${param.cpage}">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
 									<textarea id="comment" class="form-control" name="comment"
-										cols="45" rows="8" placeholder="Here goes your comment"></textarea>
+										cols="45" rows="8" placeholder="댓글을 달아주세요."></textarea>
 								</div>
-								<button type="submit" id="submit" class="btn btn-common">댓글달기</button>
+								<c:if test="${!empty sid}">
+								<button type="button" id="csubmit" class="btn btn-common">댓글달기</button>
+								</c:if>
 							</div>
 						</div>
 					</form>
@@ -203,7 +416,6 @@
 
 		</div>
 	</div>
-
 	<%@include file="../footer.jsp"%>
 	<!-- Main JS  -->
 	<script type="text/javascript" src="./assets/js/jquery-min.js"></script>

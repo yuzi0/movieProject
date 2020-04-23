@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>	
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +9,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
+<script type="text/javascript" src="./resources/jquery-3.4.1.js"></script>
+<script src="./resources/ckeditor/ckeditor.js"></script>
 
 <!-- editor -->
 <script type="text/javascript"
@@ -56,12 +60,172 @@
 	href="./assets/css/colors/red.css" media="screen" />
 <link rel="stylesheet" type="text/css"
 	href="./assets/css/lboard/fwrite.css" media="screen" />
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#freewrite")
+			.on(
+					'click',
+					function() {
+						if ($('#fctgname').val() == 'non') {
+							alert('카테고리를를 선택해주세요.');
+							return false;
+						}
+						if ($('input[name=fsubject]').val() == '') {
+							alert('제목을 입력해주세요.');
+							return false;
+						}
+						var textarea = CKEDITOR.instances.feditor
+								.getData();
+						if (textarea
+								.replace(
+										/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig,
+										"") == '') {
+							alert('내용을 입력해주세요.');
+							return false;
+						}
+
+					});
+		});
+	</script>
 <title>자유게시판 글쓰기</title>
+<script type="text/javascript">
+				
+</script>
 </head>
 <body>
 	<div class="header">
-		<%@include file="../nav2.jsp"%>
 
+<div class="logo-menu">
+	<nav class="navbar navbar-default main-navigation" role="navigation"
+		data-spy="affix" data-offset-top="50">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand logo" href="main.do"><img
+					src="./assets/img/logo.png" alt=""></a>
+			</div>
+
+			<div class="collapse navbar-collapse" id="navbar">
+				<!-- Start Navigation List -->
+				<ul class="nav navbar-nav">
+					<li><a href="introduceMoviep.do"> MOVIEP </a></li>
+					<li><a href="movieSortList.do"> 영화 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="movieSortList.do"> 장르별 영화 </a></li>
+						</ul></li>
+					<li><a class="active" href="freeList.do"> 커뮤니티 <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a class="active" href="freeList.do"> 자유 게시판 </a></li>
+							<li><a href="columnList.do"> 칼럼 게시판 </a></li>
+							<li><a href="latterList.do"> 후기 게시판 </a></li>
+						</ul></li>
+					<li><a href="infoBoard.do"> Q & A <i
+							class="fa fa-angle-down"></i>
+					</a>
+						<ul class="dropdown">
+							<li><a href="infoBoard.do"> 공지사항 </a></li>
+							<li><a href="customerCenter.do"> 고객센터 </a></li>
+						</ul></li>
+					<c:set var="sessionId" value="${sid}" />
+
+					<c:if test="${!empty sid}">
+						<c:choose>
+							<c:when test="${fn : contains(sessionId, 'admin')}">
+								<li><a href="userDelete.do"> 관리자페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="userDelete.do"> 회원 관리 </a></li>
+										<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+									</ul></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="memberInfo.do"> 마이페이지 <i
+										class="fa fa-angle-down"></i>
+								</a>
+									<ul class="dropdown">
+										<li><a href="memberInfo.do"> 나의 정보 </a></li>
+										<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+										<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+									</ul></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
+				</ul>
+				<ul class="nav navbar-nav navbar-right float-right">
+					<c:if test="${empty sid }">
+						<li class="right"><a href="login.do"><i class="ti-lock"></i>
+								로그인</a></li>
+					</c:if>
+					<c:if test="${!empty sid }">
+						<li class="right"><a href="logout_ok.do"><i
+								class="ti-lock"></i>로그아웃</a></li>
+					</c:if>
+				</ul>
+			</div>
+		</div>
+		<!-- Mobile Menu Start -->
+		<ul class="wpb-mobile-menu">
+			<li><a href="introduceMoviep.do">MOVIEP</a></li>
+			<li><a href="movieSortList.do">영화</a>
+				<ul>
+					<li><a href="movieSortList.do">장르별 영화</a></li>
+				</ul></li>
+			<li><a class="active" href="freeList.do">커뮤니티</a>
+				<ul>
+					<li><a class="active" href="freeList.do">자유 게시판</a></li>
+					<li><a href="columnList.do">칼럼 게시판</a></li>
+					<li><a href="latterList.do">후기 게시판</a></li>
+				</ul></li>
+			<li><a href="infoBoard.do">Q & A</a>
+				<ul>
+					<li><a href="infoBoard.do">공지사항</a></li>
+					<li><a href="customerCenter.do">고객센터</a></li>
+				</ul></li>
+			<c:if test="${!empty sid && sid != 'admin'}">
+
+				<li><a href="memberInfo.do">마이페이지</a>
+					<ul>
+						<li><a href="memberInfo.do">나의 정보</a></li>
+						<li><a href="memberWrite.do">내가 글 쓴 목록</a></li>
+						<li><a href="changePwd.do">비밀번호 변경</a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${!empty sid && sid == 'admin'}">
+
+				<li><a href="userDelete.do">관리자페이지</a>
+					<ul>
+						<li><a href="userDelete.do">회원 관리</a></li>
+						<li><a href="movieUpdate.do"> 영화 관리 </a></li>
+
+					</ul></li>
+			</c:if>
+			<c:if test="${empty sid }">
+
+				<li class="btn-m"><a href="login.do"><i class="ti-lock"></i>
+						로그인</a></li>
+			</c:if>
+			<c:if test="${!empty sid }">
+				<li class="btn-m"><a href="logout_ok.do"><i class="ti-lock"></i>
+						로그아웃</a></li>
+			</c:if>
+		</ul>
+		<!-- Mobile Menu End -->
+	</nav>
+</div>
 	</div>
 	<div class="page-header"
 		style="background: url(./assets/img/board/queen-of-liberty-202218_1920.jpg);">
@@ -85,37 +249,35 @@
 		<div class="container">
 			<div class="">
 				<div class="">
-					<form action="" class="">
+					<form action="freeWriteOk.do" method="post" name="fw">
 						<div class="col-md-3 form-group is-empty">
-							<label for="moviegenre">카테고리</label> <select id="category"
+							<label for="moviegenre">카테고리</label> <select id="fctgname" name="fctgname"
 								class="form-control">
-								<option selected="selected">선택해주세요</option>
-								<option>일상</option>
-								<option>유머</option>
-								<option>이슈</option>
-								<option>연애</option>
-								<option>기타</option>
+								<option selected="selected"  value="non">선택해주세요</option>
+								<option value="일상">일상</option>
+								<option value="유머">유머</option>
+								<option value="이슈">이슈</option>
+								<option value="연애">연애</option>
+								<option value="기타">기타</option>
 							</select>
 						</div>
 
 						<div class="col-md-9 form-group is-empty">
 							<label for="moviegenre">제목</label> <input type="text"
-								class="form-control" placeholder="제목">
+								class="form-control" placeholder="제목" id="fsubject" name="fsubject">
 						</div>
 						<div class="col-md-12 form-group">
 							<label for="moviegenre">내용</label>
 
-							<textarea name="leditor" id="leditor" rows="10" cols="10"
+							<textarea name="feditor" id="feditor" rows="10" cols="10"
 								class="form-control" style='width: 100%; min-width: 160px;'></textarea>
-
 						</div>
-						<div class="col-md-12">
+					<!-- 	<div class="col-md-12">
 							<input type="file" class="" id="">
-						</div>
-						<div class="col-md-12" style="padding-top:30px">
-							<a href="freeList.do" class="btn btn-common pull-left">목록</a>
-
-							<a href="freeList.do" class="btn btn-common pull-right">등록</a>
+						</div> -->
+						<div class="col-md-12" style="padding-top: 30px">
+							<a href="freeList.do?cpage=${param.cpage}" class="btn btn-common pull-left">목록</a>
+							<input type="submit" id="freewrite" class="btn btn-common pull-right" value="등록" />
 						</div>
 					</form>
 
@@ -147,17 +309,28 @@
 		src="./assets/js/jquery.themepunch.revolution.min.js"></script>
 	<script type="text/javascript"
 		src="./assets/js/jquery.themepunch.tools.min.js"></script>
-</body>
-<script type="text/javascript">
-	$(document).ready(function() {
-		var oEditors = [];
-		nhn.husky.EZCreator.createInIFrame({
-			oAppRef : oEditors,
-			elPlaceHolder : "leditor",
-			sSkinURI : "./editor/SmartEditor2Skin.html",
-			fCreator : "createSEditor2"
+		<script type="text/javascript">
+	 
+		CKEDITOR.replace('feditor', {
+			
+			filebrowserImageUploadUrl : 'fileupload.do'
 		});
+		
+		 CKEDITOR.on('dialogDefinition', function( ev ){
+	            var dialogName = ev.data.name;
+	            var dialogDefinition = ev.data.definition;
+	          
+	            switch (dialogName) {
+	                case 'image': //Image Properties dialog
+	                    //dialogDefinition.removeContents('info');
+	                    dialogDefinition.removeContents('Link');
+	                    dialogDefinition.removeContents('advanced');
+	                    break;
+	            }
+	        });
+		
+		
+	</script>
+</body>
 
-	});
-</script>
 </html>
